@@ -1,0 +1,27 @@
+{
+  "name": "anagrafica-csv",
+  "version": "1.0.0",
+  "description": "Gestione anagrafica tramite upload di file CSV",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/creativ073/anagrafica-csv.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/creativ073/anagrafica-csv/issues"
+  },
+  "homepage": "https://github.com/creativ073/anagrafica-csv#readme",
+  "dependencies": {
+    "next": "^9.0.7",
+    "react": "^16.10.2",
+    "react-dom": "^16.10.2"
+  }
+}
