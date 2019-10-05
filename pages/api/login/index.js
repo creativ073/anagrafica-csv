@@ -1,4 +1,7 @@
-export default async (req, res) => {
+const microCors = require('micro-cors');
+const cors = microCors({ allowMethods: ['POST'] });
+
+export default cors(async (req, res) => {
     const myUsername = 'andrea';
     const myPassword = 'loginApp';
     const { username, password } = await req.body;
@@ -6,12 +9,9 @@ export default async (req, res) => {
     console.log('username', username);
     console.log('password', password);
 
-    if (req.method !== 'POST') {
-        res.setHeader('Allow', ['POST']);
-        res.status(405).end(`Method ${ req.method } Not Allowed`);
-    } else if (username === myUsername && myPassword === password) {
+    if (username === myUsername && myPassword === password) {
         res.status(201).json({ "token": "aaaaa" });
     } else {
         res.status(400).json({ message: 'Credenziali non valide' });
     }
-};
+});
