@@ -91,3 +91,6 @@ typings/
 
 # PhpStorm project files
 .idea/
+
+# Lowdb
+store/db.json
