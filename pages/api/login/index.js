@@ -1,5 +1,7 @@
+const crypto = require("crypto");
 const microCors = require('micro-cors');
 const cors = microCors({ allowMethods: ['POST'] });
+import db from "../../../store/db";
 
 export default cors(async (req, res) => {
     const myUsername = 'andrea';
@@ -10,7 +12,14 @@ export default cors(async (req, res) => {
     console.log('password', password);
 
     if (username === myUsername && myPassword === password) {
-        res.status(201).json({ "token": "aaaaa" });
+        const token = crypto.randomBytes(8).toString('hex');
+        const expire = Date.now() + (20 * 60 * 1000);
+
+        db.get('user')
+            .assign({ token, expire })
+            .write();
+
+        res.status(201).json({ token });
     } else {
         res.status(400).json({ message: 'Credenziali non valide' });
     }
