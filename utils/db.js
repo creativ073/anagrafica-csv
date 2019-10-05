@@ -4,6 +4,6 @@ const adapter = new FileSync('./store/db.json');
 const db = low(adapter);
 
 // Set some defaults (required if your JSON file is empty)
-db.defaults({ user: {}, csv: [], anagrafica: [] }).write();
+db.defaults({ csv: [], anagrafica: [] }).write();
 
 export default db;

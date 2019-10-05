@@ -1,20 +1,17 @@
-const crypto = require("crypto");
 const microCors = require('micro-cors');
-require('dotenv').config();
-import db from "../../../store/db";
+const jwt = require('jsonwebtoken');
+import env from "../../../utils/env";
 
 const cors = microCors({ allowMethods: ['POST'] });
 
 export default cors(async (req, res) => {
     const { username, password } = await req.body;
 
-    if (username === process.env.USER && password === process.env.PASS) {
-        const token = crypto.randomBytes(8).toString('hex');
-        const expire = Date.now() + (20 * 60 * 1000);
-
-        db.get('user')
-            .assign({ token, expire })
-            .write();
+    if (username === env.user && password === env.pass) {
+        const token = jwt.sign({
+            exp: Math.floor(Date.now() / 1000) + (60 * 60),
+            username
+        }, env.seed);
 
         res.status(201).json({ token });
     } else {

@@ -69,6 +69,122 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Anagrafica - Upload file",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "9d4f5f1e-8bdf-4626-a74a-b6c77a801ef0",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "67915615-0bcb-4372-a7e6-27e13da77c2e",
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+							"});",
+							"pm.test(\"Response must have a body\", function () {",
+							"    pm.response.to.be.json;",
+							"    pm.response.to.have.jsonBody(\"info\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "csv",
+							"type": "file",
+							"src": "/D:/DATI/clienti/next-react/scripts/input_data.csv"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://{{host}}:{{port}}/api/anagrafica",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"anagrafica"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Anagrafica - Lista file",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "9d4f5f1e-8bdf-4626-a74a-b6c77a801ef0",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "67915615-0bcb-4372-a7e6-27e13da77c2e",
+						"exec": [
+							"pm.test(\"Successful GET request\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response must have a body\", function () {",
+							"    pm.response.to.be.json;",
+							"    pm.response.to.have.jsonBody(\"csv\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "qwertpoiuy",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:{{port}}/api/anagrafica",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"anagrafica"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
