@@ -1,9 +1,9 @@
 import env from "../../../utils/env";
-import withJwtAuth from "../../../utils/withJwtAuth";
+const jwtAuth = require('micro-jwt-auth');
 const microCors = require('micro-cors');
 
 const cors = microCors({ allowMethods: ['GET', 'POST'] });
-const auth = withJwtAuth(env.seed);
+const auth = jwtAuth(env.seed);
 
 export default auth(cors(async (req, res) => {
     if (req.method === 'GET') {
