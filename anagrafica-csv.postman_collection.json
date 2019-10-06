@@ -167,7 +167,12 @@
 							"pm.test(\"Response must have a body\", function () {",
 							"    pm.response.to.be.json;",
 							"    pm.response.to.have.jsonBody(\"csv\");",
-							"});"
+							"});",
+							"",
+							"",
+							"// Imposto il l'id da scaricare per il test di download",
+							"var jsonData = pm.response.json();",
+							"pm.globals.set(\"csvId\", jsonData.csv[0].id);"
 						],
 						"type": "text/javascript"
 					}
@@ -241,7 +246,7 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://{{host}}:{{port}}/api/anagrafica/1570270903067",
+					"raw": "http://{{host}}:{{port}}/api/anagrafica/{{csvId}}",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -250,7 +255,7 @@
 					"path": [
 						"api",
 						"anagrafica",
-						"1570270903067"
+						"{{csvId}}"
 					]
 				}
 			},
