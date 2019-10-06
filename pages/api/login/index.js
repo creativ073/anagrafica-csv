@@ -15,6 +15,6 @@ export default cors(async (req, res) => {
 
         res.status(201).json({ token });
     } else {
-        res.status(400).json({ message: 'Credenziali non valide' });
+        res.status(200).json({ message: 'Credenziali non valide' });
     }
 });

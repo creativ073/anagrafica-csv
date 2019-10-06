@@ -8,19 +8,20 @@ class MyDocument extends Document {
     }
 
     render() {
+        // noinspection HtmlRequiredTitleElement
         return (
             <Html>
-                <!--suppress HtmlRequiredTitleElement -->
                 <Head>
                     <link key="bootstrap" rel="stylesheet" type="text/css" href="/static/bootstrap.min.css"/>
                 </Head>
                 <body>
-                    <Main />
-                    <NextScript />
+                    <Main/>
+                    <NextScript/>
                 </body>
             </Html>
         )
     }
 }
 
- export default MyDocument;
+// noinspection JSUnusedGlobalSymbols
+export default MyDocument;

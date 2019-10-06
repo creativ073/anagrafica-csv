@@ -8,4 +8,5 @@ class MyApp extends App {
     }
 }
 
+// noinspection JSUnusedGlobalSymbols
 export default MyApp

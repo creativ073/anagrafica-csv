@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import Layout from "../components/Layout";
-import { Form, FormGroup, FormFeedback, Label, Input, Button, Row, Col, Container } from 'reactstrap';
+import { Form, FormGroup, FormFeedback, Label, Input, Button, Row, Col, Container, Alert } from 'reactstrap';
 import Head from "next/dist/next-server/lib/head";
+import { login } from '../utils/auth';
+import fetch from 'isomorphic-unfetch';
 
-class Index
-    extends Component {
+class Index extends Component {
     constructor(props) {
         super(props);
 
@@ -34,7 +35,7 @@ class Index
         }));
     };
 
-    handleSubmit = (e) => {
+    handleSubmit = async (e) => {
         e.preventDefault();
 
         let isValid = true;
@@ -61,17 +62,72 @@ class Index
             errors.password = "Campo richiesto";
             isValid = false;
         }
+
         if (!isValid) {
             this.setState(state => ({
                 "errors": {
                     ...state.errors,
                     ...errors
-                }
+                },
+                "isSubmitting": false
             }));
+        } else {
+            const url = '/api/login';
+            const body = JSON.stringify({
+                username: this.state.username,
+                password: this.state.password
+            });
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body
+                });
+                if (response.ok) {
+                    const json = await response.json();
+
+                    if (response.status === 201) {
+                        await login({ token: json.token });
+                    } else {
+                        this.setState(state => ({
+                            "errors": {
+                                ...state.errors,
+                                "login": json.message
+                            }
+                        }));
+                    }
+                } else {
+                    console.log('Login failed.');
+                    console.error(
+                        'Login fallita',
+                        error
+                    );
+
+                    this.setState(state => ({
+                        "errors": {
+                            ...state.errors,
+                            "login": error
+                        }
+                    }));
+                }
+            } catch (error) {
+                console.error(
+                    'Errore chiamata login',
+                    error
+                );
+
+                this.setState(state => ({
+                    "errors": {
+                        ...state.errors,
+                        "login": "Errore tecnico, riprovare la login"
+                    }
+                }));
+            }
+            this.setState({
+                "isSubmitting": false
+            });
         }
-        this.setState({
-            "isSubmitting": false
-        });
     };
 
     render() {
@@ -93,6 +149,13 @@ class Index
                     <Form id="loginForm" onSubmit={ this.handleSubmit }>
                         <Container fluid={ true }>
                             <h2>Login</h2>
+                            {
+                                this.state.isDirty && this.state.errors.login &&
+
+                                <Alert color="danger">
+                                    { this.state.errors.login }
+                                </Alert>
+                            }
                             <Row>
                                 <Col>
                                     <FormGroup>
