@@ -19,7 +19,12 @@
 							"pm.test(\"Response must have a body\", function () {",
 							"    pm.response.to.be.json;",
 							"    pm.response.to.have.jsonBody(\"token\");",
-							"});"
+							"});",
+							"",
+							"",
+							"// Imposto il token globalmente",
+							"var jsonData = pm.response.json();",
+							"pm.globals.set(\"auth\", jsonData.token);"
 						],
 						"type": "text/javascript"
 					}
@@ -101,6 +106,16 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "POST",
 				"header": [],
 				"body": {
@@ -164,7 +179,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "qwertpoiuy",
+							"value": "{{auth}}",
 							"type": "string"
 						}
 					]
