@@ -10,8 +10,8 @@ class MyDocument extends Document {
     render() {
         return (
             <Html>
+                <!--suppress HtmlRequiredTitleElement -->
                 <Head>
-                    <title key="title">Anagrafica CSV</title>
                     <link key="bootstrap" rel="stylesheet" type="text/css" href="/static/bootstrap.min.css"/>
                 </Head>
                 <body>
