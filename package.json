@@ -4,7 +4,7 @@
   "description": "Gestione anagrafica tramite upload di file CSV",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "dev": "next",
     "build": "next build",
     "start": "next start"
@@ -29,5 +29,10 @@
     "next": "^9.0.7",
     "react": "^16.10.2",
     "react-dom": "^16.10.2"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^9.3.0",
+    "babel-jest": "^24.9.0",
+    "jest": "^24.9.0"
   }
 }
