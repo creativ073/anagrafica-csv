@@ -1,6 +1,6 @@
+import env from "../../../utils/env";
 const microCors = require('micro-cors');
 const jwt = require('jsonwebtoken');
-import env from "../../../utils/env";
 
 const cors = microCors({ allowMethods: ['POST'] });
 

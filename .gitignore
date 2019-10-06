@@ -94,3 +94,6 @@ typings/
 
 # Lowdb
 store/db.json
+
+# CSV
+uploads/*.csv
