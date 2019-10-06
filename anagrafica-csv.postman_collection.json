@@ -200,6 +200,61 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "Anagrafica - Download file",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "9d4f5f1e-8bdf-4626-a74a-b6c77a801ef0",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "67915615-0bcb-4372-a7e6-27e13da77c2e",
+						"exec": [
+							"pm.test(\"Successful GET request\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://{{host}}:{{port}}/api/anagrafica/1570270903067",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"anagrafica",
+						"1570270903067"
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [
