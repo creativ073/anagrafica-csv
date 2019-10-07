@@ -76,7 +76,71 @@
 			"response": []
 		},
 		{
-			"name": "Anagrafica - Upload file",
+			"name": "Anagrafica - Lista persone",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "9d4f5f1e-8bdf-4626-a74a-b6c77a801ef0",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "67915615-0bcb-4372-a7e6-27e13da77c2e",
+						"exec": [
+							"pm.test(\"Successful GET request\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Response must have a body\", function () {",
+							"    pm.response.to.be.json;",
+							"    pm.response.to.have.jsonBody(\"anagrafica\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{auth}}",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "token={{auth}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://{{host}}:{{port}}/api/anagrafica",
+					"protocol": "http",
+					"host": [
+						"{{host}}"
+					],
+					"port": "{{port}}",
+					"path": [
+						"api",
+						"anagrafica"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "CSV - Upload file",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -129,7 +193,7 @@
 					]
 				},
 				"url": {
-					"raw": "http://{{host}}:{{port}}/api/anagrafica",
+					"raw": "http://{{host}}:{{port}}/api/csv",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -137,14 +201,14 @@
 					"port": "{{port}}",
 					"path": [
 						"api",
-						"anagrafica"
+						"csv"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Anagrafica - Lista file",
+			"name": "CSV - Lista file",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -190,9 +254,15 @@
 					]
 				},
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "token={{auth}}",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "http://{{host}}:{{port}}/api/anagrafica",
+					"raw": "http://{{host}}:{{port}}/api/csv",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -200,14 +270,14 @@
 					"port": "{{port}}",
 					"path": [
 						"api",
-						"anagrafica"
+						"csv"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "Anagrafica - Download file",
+			"name": "CSV - Download file",
 			"event": [
 				{
 					"listen": "prerequest",
@@ -244,9 +314,15 @@
 					]
 				},
 				"method": "GET",
-				"header": [],
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "token={{auth}}",
+						"type": "text"
+					}
+				],
 				"url": {
-					"raw": "http://{{host}}:{{port}}/api/anagrafica/{{csvId}}",
+					"raw": "http://{{host}}:{{port}}/api/csv/{{csvId}}",
 					"protocol": "http",
 					"host": [
 						"{{host}}"
@@ -254,7 +330,7 @@
 					"port": "{{port}}",
 					"path": [
 						"api",
-						"anagrafica",
+						"csv",
 						"{{csvId}}"
 					]
 				}
