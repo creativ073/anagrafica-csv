@@ -83,9 +83,7 @@ class LoadPage extends Component {
     render() {
         const validCsv = !this.state.errors.csv;
         const { isDirty } = this.state;
-        const { sendCsvLoading, sendCsvError } = this.props.context;
-
-        console.log('sendCsvLoading', sendCsvLoading);
+        const { sendCsvLoading, sendCsvError, getCsvListLoading, getCsvListError } = this.props.context;
 
         return (
             <Layout private={ true }>
@@ -131,8 +129,12 @@ class LoadPage extends Component {
                                 </Col>
                                 <Col xs={ 12 } md={ 3 } className="text-left pt-4">
                                     <div className="pt-2">
-                                        <Button type='button' color="primary" onClick={ this.handleSubmit }
-                                                disabled={ sendCsvLoading }>Invia</Button>
+                                        {
+                                            sendCsvLoading
+                                                ? <p>Loading</p>
+                                                : <Button type='button' color="primary"
+                                                          onClick={ this.handleSubmit }>Invia</Button>
+                                        }
                                     </div>
                                 </Col>
                             </Row>
@@ -142,6 +144,20 @@ class LoadPage extends Component {
 
                 <section>
                     <h2>File caricati</h2>
+                    {
+                        getCsvListError
+                            ? <p className="error">{ getCsvListError }</p>
+                            : (
+                                getCsvListLoading
+                                    ? <p>Caricamento lista...</p>
+                                    : <ul>
+                                        {
+                                            this.props.context.csv.map(file => <li key={ file.id }>Caricato
+                                                il { file.date }</li>)
+                                        }
+                                    </ul>
+                            )
+                    }
                     <ul>
                         {
                             this.props.context.csv.map(file => <li key={ file.id }>Caricato il { file.date }</li>)
@@ -151,7 +167,6 @@ class LoadPage extends Component {
             </Layout>
         );
     }
-
 }
 
 function Load(props) {

@@ -1,10 +1,9 @@
 import React from 'react';
 import App from 'next/app';
-import Router from "next/router";
+//import Router from "next/router";
 import fetch from "isomorphic-unfetch";
 import cookie from 'js-cookie';
 import { AppContext } from '../utils/context';
-import { login } from "../utils/auth";
 
 class MyApp extends App {
     constructor(props) {
@@ -12,6 +11,8 @@ class MyApp extends App {
         this.state = {
             "csv": [],
             "csvInitialized": false,
+            "getCsvListLoading": false,
+            "getCsvListError": "",
             "sendCsvLoading": false,
             "sendCsvError": ""
         };
@@ -21,10 +22,12 @@ class MyApp extends App {
         const token = cookie.get('token');
         const apiUrl = 'http://localhost:3000/api/anagrafica';
 
-        const redirectOnError = () => Router.push('/index');
+        //const redirectOnError = () => Router.push('/index');
 
         this.setState({
-            csvInitialized: true
+            "csvInitialized": true,
+            "getCsvListLoading": true,
+            "getCsvListError": ""
         });
 
         try {
@@ -41,15 +44,22 @@ class MyApp extends App {
                 const json = await response.json();
 
                 this.setState({
-                    csv: json.csv.reverse()
+                    csv: json.csv.reverse(),
+                    "getCsvListLoading": false,
+                    "getCsvListError": ""
                 })
             } else {
                 console.error("load CSV KO");
-                await redirectOnError();
+                this.setState({
+                    "getCsvListLoading": false,
+                    "getCsvListError": "Errore caricamento dati"
+                });
             }
         } catch (error) {
-            console.error("load CSV error", error);
-            await redirectOnError();
+            this.setState({
+                "getCsvListLoading": false,
+                "getCsvListError": "Errore caricamento dati"
+            });
         }
         console.info("load CSV return");
     };
