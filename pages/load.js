@@ -158,7 +158,7 @@ class LoadPage extends Component {
                                         {
                                             this.props.context.csv.map(file => (
                                                 <li key={ file.id }>
-                                                    <a href={ "/api/anagrafica/" + file.id } target="_blank">
+                                                    <a href={ "/api/csv/" + file.id } target="_blank">
                                                         Caricato
                                                         il { file.date }</a></li>
                                             ))

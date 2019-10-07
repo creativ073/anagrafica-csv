@@ -20,7 +20,7 @@ class MyApp extends App {
 
     getCsvList = async () => {
         const token = cookie.get('token');
-        const apiUrl = 'http://localhost:3000/api/anagrafica';
+        const apiUrl = 'http://localhost:3000/api/csv';
 
         //const redirectOnError = () => Router.push('/index');
 
@@ -66,7 +66,7 @@ class MyApp extends App {
 
     sendCsv = async (csv) => {
         const token = cookie.get('token');
-        const url = '/api/anagrafica';
+        const url = '/api/csv';
         let body = new FormData();
         body.append('csv', csv);
 
