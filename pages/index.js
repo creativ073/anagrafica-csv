@@ -128,6 +128,8 @@ class Index extends Component {
                 "isSubmitting": false
             });
         }
+
+        return false;
     };
 
     render() {
@@ -135,7 +137,7 @@ class Index extends Component {
         const validPassword = !this.state.errors.password;
 
         return (
-            <Layout>
+            <Layout private={ false }>
                 <Head>
                     <title>Anagrafica - Login</title>
                 </Head>

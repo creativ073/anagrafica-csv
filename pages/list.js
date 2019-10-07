@@ -5,7 +5,7 @@ import { withAuthSync } from '../utils/auth';
 
 function List() {
     return (
-        <Layout>
+        <Layout private={ true }>
             <Head>
                 <title>Anagrafica - Lista</title>
             </Head>

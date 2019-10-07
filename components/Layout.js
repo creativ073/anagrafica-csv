@@ -1,9 +1,13 @@
 import React from 'react';
 import { Container } from 'reactstrap';
+import Header from "./Header";
 
 const Layout = props => (
     <>
         <div id="main">
+            {
+                props.private && <Header/>
+            }
             <Container fluid={ true }>
                 { props.children }
             </Container>
