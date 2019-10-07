@@ -1,8 +1,8 @@
 import env from "../../../utils/env";
 import db from "../../../utils/db";
+import jwtAuth from "../../../utils/jwtAuth";
 const fs = require('fs');
 const path = require('path');
-const jwtAuth = require('micro-jwt-auth');
 const microCors = require('micro-cors');
 
 const cors = microCors({ allowMethods: ['GET'] });
