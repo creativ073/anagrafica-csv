@@ -1,14 +1,11 @@
-import React, { PureComponent } from "react";
-import Router from 'next/router';
-import nextCookie from 'next-cookies';
+import React, { Component } from "react";
+import { AppContext } from '../utils/context';
 import { FormGroup, FormFeedback, Label, CustomInput, Button, Row, Col, Container, Alert } from 'reactstrap';
 import Layout from "../components/Layout";
 import Head from "next/dist/next-server/lib/head";
-import { login, withAuthSync } from '../utils/auth';
-import fetch from 'isomorphic-unfetch';
-import cookie from 'js-cookie';
+import { withAuthSync } from '../utils/auth';
 
-class Load extends PureComponent {
+class LoadPage extends Component {
     constructor(props) {
         super(props);
 
@@ -18,45 +15,18 @@ class Load extends PureComponent {
                 "csv": "",
                 "login": ""
             },
-            "isSubmitting": false,
             "isDirty": false
         };
     }
 
-    static async getInitialProps(ctx) {
-        const { token } = nextCookie(ctx);
-        const apiUrl = 'http://localhost:3000/api/anagrafica';
-        const ret = {
-            csv: []
-        };
-
-        const redirectOnError = () =>
-            typeof window !== 'undefined'
-                ? Router.push('/index')
-                : ctx.res.writeHead(302, { Location: 'http://localhost:3000/index' }).end();
-
-        try {
-            const response = await fetch(apiUrl, {
-                method: 'GET',
-                credentials: 'include',
-                headers: {
-                    Authorization: "Bearer " + token
-                }
-            });
-
-            if (response.ok) {
-                console.info("load CSV OK");
-                return await response.json();
-            } else {
-                console.error("load CSV KO");
-                await redirectOnError();
+    componentDidMount = async () => {
+        if (!this.props.context.csvInitialized) {
+            try {
+                await this.props.context.getCsvList();
+            } catch (error) {
+                console.error(error);
             }
-        } catch (error) {
-            console.error("load CSV error", error);
-            await redirectOnError();
         }
-        console.info("load CSV return");
-        return ret;
     };
 
     setInputValue = (e) => {
@@ -76,17 +46,16 @@ class Load extends PureComponent {
 
         let isValid = true;
         const errors = {
-            "csv": "",
-            "login": ""
+            "csv": ""
         };
 
-        this.setState({
+        this.setState(state => ({
             "isDirty": true,
-            "isSubmitting": true,
             "errors": {
+                ...state.errors,
                 ...errors
             }
-        });
+        }));
 
         if (!this.state.csv) {
             errors.csv = "Campo richiesto";
@@ -98,68 +67,14 @@ class Load extends PureComponent {
                 "errors": {
                     ...state.errors,
                     ...errors
-                },
-                "isSubmitting": false
+                }
             }));
         } else {
-            const token = cookie.get('token');
-            const url = '/api/anagrafica';
-            let body = new FormData();
-            body.append('csv', this.state.csv);
-
             try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    credentials: 'include',
-                    headers: {
-                        Authorization: "Bearer " + token
-                    },
-                    body
-                });
-                if (response.ok) {
-                    const json = await response.json();
-
-                    if (response.status === 201) {
-                        await login({ token: json.token });
-                    } else {
-                        this.setState(state => ({
-                            "errors": {
-                                ...state.errors,
-                                "login": json.message
-                            }
-                        }));
-                    }
-                } else {
-                    console.log('Login failed.');
-                    console.error(
-                        'Login fallita',
-                        error
-                    );
-
-                    this.setState(state => ({
-                        "errors": {
-                            ...state.errors,
-                            "login": error
-                        }
-                    }));
-                }
+                await this.props.context.sendCsv(this.state.csv);
             } catch (error) {
-                console.error(
-                    'Errore chiamata login',
-                    error
-                );
-
-                this.setState(state => ({
-                    "errors": {
-                        ...state.errors,
-                        "login": "Errore tecnico, riprovare la login"
-                    }
-                }));
+                console.error(error);
             }
-
-            this.setState({
-                "isSubmitting": false
-            });
         }
 
         return false;
@@ -167,6 +82,10 @@ class Load extends PureComponent {
 
     render() {
         const validCsv = !this.state.errors.csv;
+        const { isDirty } = this.state;
+        const { sendCsvLoading, sendCsvError } = this.props.context;
+
+        console.log('sendCsvLoading', sendCsvLoading);
 
         return (
             <Layout private={ true }>
@@ -183,10 +102,10 @@ class Load extends PureComponent {
 
                     <div id="loadForm">
                         {
-                            this.state.isDirty && this.state.errors.login &&
+                            isDirty && sendCsvError &&
 
                             <Alert color="danger">
-                                { this.state.errors.login }
+                                { sendCsvError }
                             </Alert>
                         }
                         <Container fluid={ true }>
@@ -200,12 +119,12 @@ class Load extends PureComponent {
                                             id="csv"
                                             placeholder="File CSV"
                                             onChange={ this.setInputValue }
-                                            disabled={ this.state.isSubmitting }
-                                            valid={ this.state.isDirty && validCsv }
-                                            invalid={ this.state.isDirty && !validCsv }
+                                            disabled={ sendCsvLoading }
+                                            valid={ isDirty && validCsv }
+                                            invalid={ isDirty && !validCsv }
                                         />
                                         {
-                                            this.state.isDirty && !validCsv &&
+                                            isDirty && !validCsv &&
                                             <FormFeedback>{ this.state.errors.csv }</FormFeedback>
                                         }
                                     </FormGroup>
@@ -213,7 +132,7 @@ class Load extends PureComponent {
                                 <Col xs={ 12 } md={ 3 } className="text-left pt-4">
                                     <div className="pt-2">
                                         <Button type='button' color="primary" onClick={ this.handleSubmit }
-                                                disabled={ this.state.isSubmitting }>Invia</Button>
+                                                disabled={ sendCsvLoading }>Invia</Button>
                                     </div>
                                 </Col>
                             </Row>
@@ -225,7 +144,7 @@ class Load extends PureComponent {
                     <h2>File caricati</h2>
                     <ul>
                         {
-                            this.props.csv.map(file => <li key={ file.id }>Caricato il { file.date }</li>)
+                            this.props.context.csv.map(file => <li key={ file.id }>Caricato il { file.date }</li>)
                         }
                     </ul>
                 </section>
@@ -233,6 +152,12 @@ class Load extends PureComponent {
         );
     }
 
+}
+
+function Load(props) {
+    return (<AppContext.Consumer>
+        { (context) => <LoadPage { ...props } context={ context }/> }
+    </AppContext.Consumer>);
 }
 
 export default withAuthSync(Load);
