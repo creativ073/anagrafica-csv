@@ -19,3 +19,21 @@ Opzionale ma gradito, un readme.md dove vengono spiegati l’architettura ed i p
 Consegnare tramite repository git privato utilizzando la tecnica di frequent commit per lo sviluppo.
 
 Consegna: lunedì 7/10.
+
+## Architettura
+Ho usato il framework Next.js che mi permetteva di gestire sia il FE che il BE.
+
+### Backend
+Ho creato delle API REST. La sicurezza è gestita tramite filtro CORS e token JWT. Le API sono totalmente disaccoppiate dal frontend,
+
+### Database
+Ho utilizzato Lowdb, database JSON su file che espone l'interfaccia di lodash.
+E' molto utile per lo sviluppo veloce, ovviamente va sostituito con un DB più potente al momento di aggiungere maggiori funzionalità e di aumentare la scalabilità.
+
+## Punti di forza
+Sia Next.js che Lowdb garantiscono uno sviluppo veloce, Next.js è espandibile con vari esempi già pronti.
+L'app è stata fatta con le logiche REST e JWT che rappresentano gli standard più utilizzati.
+
+## Punti di debolezza
+Next.js va padroneggiato, perché gestendo sia il BE che il FE in fase di debug va capito dove è il problema. Questo aspetto mi ha dato vari problemi.
+Lowdb ha molte limitazioni per un uso intensivo in produzione.
