@@ -13,9 +13,12 @@ module.exports = exports = (secret, whitelist, config = {}) => fn => {
     }
 
     return (req, res) => {
-        const bearerToken = req.headers.authorization;
+        const isGet = req.method === 'GET';
+        const bearerToken = isGet ? req.headers.cookie : req.headers.authorization;
         const pathname = url.parse(req.url).pathname;
         const whitelisted = Array.isArray(whitelist) && whitelist.indexOf(pathname) >= 0;
+        
+        console.log(req.headers.cookie);
 
         if (!bearerToken && !whitelisted) {
             res.writeHead(401);
@@ -24,7 +27,7 @@ module.exports = exports = (secret, whitelist, config = {}) => fn => {
         }
 
         try {
-            const token = bearerToken.replace('Bearer ', '');
+            const token = isGet ? bearerToken.replace('token=', '') : bearerToken.replace('Bearer ', '');
             req.jwt = jwt.verify(token, secret)
         } catch (err) {
             if (!whitelisted) {

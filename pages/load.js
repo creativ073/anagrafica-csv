@@ -73,9 +73,9 @@ class LoadPage extends Component {
             try {
                 await this.props.context.sendCsv(this.state.csv);
 
-                this.setState(state => ({
+                this.setState({
                     "csv": ""
-                }));
+                });
             } catch (error) {
                 console.error(error);
             }
@@ -156,8 +156,12 @@ class LoadPage extends Component {
                                     ? <p>Caricamento lista...</p>
                                     : <ul>
                                         {
-                                            this.props.context.csv.map(file => <li key={ file.id }>Caricato
-                                                il { file.date }</li>)
+                                            this.props.context.csv.map(file => (
+                                                <li key={ file.id }>
+                                                    <a href={ "/api/anagrafica/" + file.id } target="_blank">
+                                                        Caricato
+                                                        il { file.date }</a></li>
+                                            ))
                                         }
                                     </ul>
                             )
