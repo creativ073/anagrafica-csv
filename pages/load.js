@@ -158,11 +158,6 @@ class LoadPage extends Component {
                                     </ul>
                             )
                     }
-                    <ul>
-                        {
-                            this.props.context.csv.map(file => <li key={ file.id }>Caricato il { file.date }</li>)
-                        }
-                    </ul>
                 </section>
             </Layout>
         );
