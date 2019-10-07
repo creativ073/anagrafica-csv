@@ -72,6 +72,10 @@ class LoadPage extends Component {
         } else {
             try {
                 await this.props.context.sendCsv(this.state.csv);
+
+                this.setState(state => ({
+                    "csv": ""
+                }));
             } catch (error) {
                 console.error(error);
             }
