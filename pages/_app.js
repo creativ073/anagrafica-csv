@@ -9,14 +9,64 @@ class MyApp extends App {
     constructor(props) {
         super(props);
         this.state = {
+            "anagrafica": [],
             "csv": [],
+            "anagraficaInitialized": false,
             "csvInitialized": false,
+            "getAnagraficaLoading": false,
+            "getAnagraficaError": "",
             "getCsvListLoading": false,
             "getCsvListError": "",
             "sendCsvLoading": false,
             "sendCsvError": ""
         };
     }
+
+    getAnagrafica = async () => {
+        const token = cookie.get('token');
+        const apiUrl = 'http://localhost:3000/api/anagrafica';
+
+        //const redirectOnError = () => Router.push('/index');
+
+        this.setState({
+            "anagraficaInitialized": true,
+            "getAnagraficaLoading": true,
+            "getAnagraficaError": ""
+        });
+
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            });
+
+            if (response.ok) {
+                console.info("load Anagrafica OK");
+                const json = await response.json();
+
+                this.setState({
+                    "anagrafica": json.anagrafica,
+                    "getAnagraficaLoading": false,
+                    "getAnagraficaError": ""
+                })
+            } else {
+                console.error("load Anagrafica KO");
+                this.setState({
+                    "getAnagraficaLoading": false,
+                    "getAnagraficaError": "Errore caricamento dati"
+                });
+            }
+        } catch (error) {
+            this.setState({
+                "getAnagraficaLoading": false,
+                "getAnagraficaError": "Errore caricamento dati"
+            });
+        }
+        console.info("load Anagrafica return");
+    };
 
     getCsvList = async () => {
         const token = cookie.get('token');
@@ -93,6 +143,7 @@ class MyApp extends App {
                         "sendCsvError": ""
                     });
                     this.getCsvList();
+                    this.getAnagrafica();
                 } else {
                     this.setState({
                         "sendCsvLoading": false,
@@ -127,6 +178,7 @@ class MyApp extends App {
         return (
             <AppContext.Provider value={ {
                 ...this.state,
+                getAnagrafica: this.getAnagrafica,
                 getCsvList: this.getCsvList,
                 sendCsv: this.sendCsv
             } }>

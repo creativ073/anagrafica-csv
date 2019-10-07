@@ -92,7 +92,7 @@ class LoadPage extends Component {
         return (
             <Layout private={ true }>
                 <Head>
-                    <title>Anagrafica - Lista</title>
+                    <title>CSV - Lista</title>
                 </Head>
 
                 <section>

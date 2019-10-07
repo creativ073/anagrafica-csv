@@ -1,13 +1,19 @@
 import Link from 'next/link'
 import { logout } from '../utils/auth'
 
-const Header = props => (
+// noinspection HtmlUnknownTarget
+const Header = () => (
     <header>
         <nav>
             <ul>
                 <li>
                     <Link href='/load'>
                         <a>Caricamento file</a>
+                    </Link>
+                </li>
+                <li>
+                    <Link href='/list'>
+                        <a>Anagrafica</a>
                     </Link>
                 </li>
                 <li className="logout">
@@ -44,6 +50,6 @@ const Header = props => (
       }
     ` }</style>
     </header>
-)
+);
 
 export default Header
