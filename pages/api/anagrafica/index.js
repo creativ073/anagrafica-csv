@@ -41,7 +41,7 @@ export default auth(cors(async (req, res) => {
                     const { csv } = files;
                     const time = new Date();
                     const fileId = time.getTime();
-                    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric' };
+                    const options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' };
                     const fileDate = time.toLocaleDateString('it-IT', options);
                     const fileName = fileId + ".csv";
 
