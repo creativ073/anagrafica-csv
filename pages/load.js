@@ -1,11 +1,12 @@
 import React, { PureComponent } from "react";
 import Router from 'next/router';
 import nextCookie from 'next-cookies';
-import { Form, FormGroup, FormFeedback, Label, CustomInput, Button, Row, Col, Container, Alert } from 'reactstrap';
+import { FormGroup, FormFeedback, Label, CustomInput, Button, Row, Col, Container, Alert } from 'reactstrap';
 import Layout from "../components/Layout";
 import Head from "next/dist/next-server/lib/head";
 import { login, withAuthSync } from '../utils/auth';
 import fetch from 'isomorphic-unfetch';
+import cookie from 'js-cookie';
 
 class Load extends PureComponent {
     constructor(props) {
@@ -22,7 +23,7 @@ class Load extends PureComponent {
         };
     }
 
-    static getInitialProps = async ctx => {
+    static async getInitialProps(ctx) {
         const { token } = nextCookie(ctx);
         const apiUrl = 'http://localhost:3000/api/anagrafica';
         const ret = {
@@ -59,7 +60,7 @@ class Load extends PureComponent {
     };
 
     setInputValue = (e) => {
-        const val = e.target.value;
+        const val = e.target.files[0];
 
         this.setState(state => ({
             "csv": val,
@@ -101,17 +102,18 @@ class Load extends PureComponent {
                 "isSubmitting": false
             }));
         } else {
+            const token = cookie.get('token');
             const url = '/api/anagrafica';
-            /*
-            const body = JSON.stringify({
-                username: this.state.username,
-                password: this.state.password
-            });
+            let body = new FormData();
+            body.append('csv', this.state.csv);
 
             try {
                 const response = await fetch(url, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    headers: {
+                        Authorization: "Bearer " + token
+                    },
                     body
                 });
                 if (response.ok) {
@@ -154,7 +156,6 @@ class Load extends PureComponent {
                     }
                 }));
             }
-            */
 
             this.setState({
                 "isSubmitting": false
@@ -180,7 +181,7 @@ class Load extends PureComponent {
                 <section>
                     <h2>Nuovo file da caricare</h2>
 
-                    <Form id="loadForm" onSubmit={ this.handleSubmit }>
+                    <div id="loadForm">
                         {
                             this.state.isDirty && this.state.errors.login &&
 
@@ -199,7 +200,6 @@ class Load extends PureComponent {
                                             id="csv"
                                             placeholder="File CSV"
                                             onChange={ this.setInputValue }
-                                            value={ this.state.csv }
                                             disabled={ this.state.isSubmitting }
                                             valid={ this.state.isDirty && validCsv }
                                             invalid={ this.state.isDirty && !validCsv }
@@ -212,13 +212,13 @@ class Load extends PureComponent {
                                 </Col>
                                 <Col xs={ 12 } md={ 3 } className="text-left pt-4">
                                     <div className="pt-2">
-                                        <Button type='submit' color="primary"
+                                        <Button type='button' color="primary" onClick={ this.handleSubmit }
                                                 disabled={ this.state.isSubmitting }>Invia</Button>
                                     </div>
                                 </Col>
                             </Row>
                         </Container>
-                    </Form>
+                    </div>
                 </section>
 
                 <section>
